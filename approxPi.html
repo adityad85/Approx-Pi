@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<body>
+<div id="approxPi">
+    <h4>Monte Carlo</h4>
+    <p>Click the button for animation</p>
+    <canvas id="myCanvas" width="200" height="200" style="border:3px solid #303030;">
+        Your browser does not support it may be right now.
+    </canvas>
+    <br>
+    <input id="startButton" type="button" value="Approximate Pi!" onclick="approxPi()">
+    <p><code id="PI_DATA"></code></p>
+    </div>
+    </body>
+    <script>
+    var canvas=document.getElementById("myCanvas");
+    var context= canvas.getContext("2d");
+    context.beginPath();
+    context.arc(0,0,canvas.width,0,2*Math.PI);
+    context.stroke();
+    var dotsInCircle=0,dotsOutsideCircle=0;
+    var radius = canvas.width;
+
+    function approxPi(){
+        resetAnimation();
+        animate();
+        
+    }
+    function animate(){
+        var drawDots= setInterval(function(){drawDot();},0.125);
+        setTimeout(function(){clearTimeout(drawDots);displayButtion();},30000);
+
+    }
+    function drawDot(){
+        var canvas= document.getElementById("myCanvas");
+        var context= canvas.getContext("2d");
+        document.getElementById("startButton").style.display="none";
+        var x= Math.floor((Math.random()*canvas.width)+1);
+        var y= Math.floor((Math.random()*canvas.width)+1);
+        var distance = Math.sqrt(x*x+y*y);
+        if(distance<radius){
+            context.fillStyle="#ff9900";
+            context.fillRect(x,y,2,2);
+            dotsInCircle++;
+        }
+        else{
+            context.fillStyle="#006699";
+            context.fillRect(x,y,2,2);
+            dotsOutsideCircle++;
+        }
+        var message ="<p><code>&pi; &#8776; 4(dots_in_circle)/(dots_in_square)<br>";
+        message+=" =4("+dotsInCircle+")/(";
+        message+= dotsInCircle+dotsOutsideCircle+")";
+        message+=" = "+(4*(dotsInCircle/(dotsInCircle+dotsOutsideCircle)));
+        message+= "</code></p>";
+        document.getElementById("PI_DATA").innerHTML=message;
+    }
+    function displayButtion(){
+        document.getElementById("startButton").style.direction="block";
+    }
+    function resetAnimation(){
+        document.getElementById("startButton").style.display="block";
+        document.getElementById("PI_DATA").innerHTML="";
+        var canvas= document.getElementById("myCanvas");
+        var context= canvas.getContext("2d");
+        context.clearRect(0,0,canvas.width,canvas.height);
+        context.beginPath();
+        context.arc(0,0,200,0,2*Math.PI);
+        context.stroke();
+        dotsInCircle=0,dotsOutsideCircle=0;
+    }
+    </script>
